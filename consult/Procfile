@@ -1,1 +1,1 @@
-web: gunicorn ehr_server.wsgi
+web: gunicorn consult.wsgi
