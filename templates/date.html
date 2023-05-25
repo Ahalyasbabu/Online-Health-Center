@@ -1,0 +1,359 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div id="wrapper">
+        <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
+            <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+                    <div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-laugh-wink"></i></div>
+                    <div class="sidebar-brand-text mx-3"><span>Consult</span></div>
+                </a>
+                <hr class="sidebar-divider my-0">
+                <ul class="navbar-nav text-light" id="accordionSidebar">
+                    <li class="nav-item"><a  class="nav-link" href="{% url 'homepage' %}"><i class="far fa-bookmark"></i><span>Home</span></a></li>
+                    <li class="nav-item"><a  class="nav-link" href="{% url 'departments' %}"><i class="far fa-bookmark"></i><span>Departments</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'doctors' %}"><i class="far fa-bookmark"></i><span>Doctors</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'service-list' %}"><i class="far fa-bookmark"></i><span>Services</span></a></li>
+                    <li id="xxx" class="nav-item"><a class="nav-link active" class="nav-link" href="{% url 'book-appointment' %}"><i class="far fa-bookmark"></i><span>Book an appointment</span></a></li>
+                    <li id="yyy" class="nav-item"><a   class="nav-link" href="{% url 'userAppointments' %}"><i class="far fa-bookmark"></i><span>My appointment</span></a></li>
+                    <li id="aaa" class="nav-item"><a   class="nav-link " href="{% url 'list-medicine' %}"><i class="far fa-bookmark"></i><span>Medicines</span></a></li>
+                    <li id="zzz" class="nav-item"><a   class="nav-link" href="{% url 'profile-page' %}"><i class="far fa-bookmark"></i><span>My Profile</span></a></li>
+                    <li id="zzz" class="nav-item "><a   class="nav-link " href="{% url 'feedback-add' %}"><i class="far fa-bookmark"></i><span>Feedback</span></a></li>
+                    <li class="nav-item"></li>
+                </ul>
+                <!-- <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div> -->
+            </div>
+        </nav>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
+                    <div class="container-fluid"><button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button>
+                        
+                        <ul class="navbar-nav flex-nowrap ms-auto">
+                            
+                            <li class="nav-item dropdown no-arrow mx-1"></li>
+                            <li class="nav-item dropdown no-arrow mx-1">
+                                <div class="shadow dropdown-list dropdown-menu dropdown-menu-end" aria-labelledby="alertsDropdown"></div>
+                            </li>
+                            <div class="d-none d-sm-block topbar-divider"></div>
+                            <li class="nav-item dropdown no-arrow" onclick="logoutNow()">
+                                <div class="nav-item dropdown no-arrow"><a id="test" class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown"><span class="d-none d-lg-inline me-2 text-gray-600 small" id="userLoginText">Login</span><img  class="border rounded-circle img-profile"  src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png"></a>
+                                    <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a class="dropdown-item" href="#"></a>
+                                        <div class="dropdown-divider"></div><a class="dropdown-item" href="{% url 'login' %}"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
+                                    </div>
+                                </div>
+                                <script>
+                                    $("#test").on('click',function(){
+                                        if (localStorage.getItem('userName') == "" || localStorage.getItem('userId') == undefined ){
+                                            window.location = "{% url 'login' %}"
+                                        }
+                                    })
+    
+                                   
+                                </script>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+
+                <div class="container-fluid">
+                    <div class="d-sm-flex justify-content-between align-items-center mb-4">
+                        <h3 class="text-dark mb-0">Appointment</h3>
+                    </div>
+                </div>
+
+                <center>
+                <div class="row" style="margin: 5px;">
+                    <div class="col-sm-12">
+
+                        <!-- <select class="display-inline-block" style="margin-right: 10px;margin-top: 10%;width: 200px;height: 40px;font-size: 20px;font-weight: bold;border-radius: 5px;text-align: center;"> -->
+                            <!-- <option value="1" selected="">January</option>
+                            <option value="2">February</option> -->
+                            <!-- <option value="3" selected="">March</option> -->
+                            <!-- <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option> -->
+                        <!-- </select> -->
+                        <input type="date" id="days"  class="display-inline-block" style="margin-right: 10px;width: 200px;height: 40px;font-size: 20px;font-weight: bold;border-radius: 5px;text-align: center;">
+                        <!-- <select id="days" class="display-inline-block" style="margin-right: 10px;width: 200px;height: 40px;font-size: 20px;font-weight: bold;border-radius: 5px;text-align: center;">
+                            <option value="" selected="">Select day</option>
+                        
+                            <option value="27">27</option>
+                            <option value="28">28</option>
+                            <option value="29">29</option>
+                            <option value="30">30</option>
+                            <option value="31">31</option>
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                           
+                       
+                        </select> -->
+
+                        
+
+
+                        <!-- <select class="display-inline-block" style="width: 200px;height: 40px;font-size: 20px;font-weight: bold;border-radius: 5px;text-align: center;">
+                            <option value="2023" selected="">2023</option>
+                        </select><br><br> -->
+
+                        <select id="depList" class="display-inline-block" style="margin-right: 10px;width: 200px;height: 40px;font-size: 20px;font-weight: bold;border-radius: 5px;text-align: center;">
+                            <option value="" selected="">Select Department</option>
+                            {% for dep in departments %}
+                                <option value={{dep.id}}>{{dep.name}}</option>
+                            {% endfor %}
+                        
+                        </select>
+                        
+
+                        <select id="doctorList" class="display-inline-block" style="margin-right: 10px;width: 200px;height: 40px;font-size: 20px;font-weight: bold;border-radius: 5px;text-align: center;">
+                            
+                        </select>
+
+                        <select id="timeSlot" class="display-inline-block" style="margin-right: 10px;width: 200px;height: 40px;font-size: 20px;font-weight: bold;border-radius: 5px;text-align: center;">
+                            
+                            
+                        </select>
+                        
+                            
+                         
+                        <input type="checkbox"  id="ehrPermission" > <b>  Show my EHR records</b>
+
+                           
+
+                        
+
+                        <!-- <div style="margin-top: 25px;"><input id="myTime" class="mb-2 d-inline" type="time" onchange="onTimeChange()">
+                            <p class="d-inline mx-2"></p>
+                        </div> -->
+
+                    </div>
+
+                    <div class="col" style="margin-top: 20px;">
+
+                       <a href="#"> <button class="btn btn-primary" id="takeapp" type="button" data-bs-toggle="modal"  data-bs-target="#modal1">Next</button></a>
+
+                    </div>
+                </div>
+                </center>
+            </div>
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span>Copyright © Brand 2023</span></div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    
+
+    <script>
+
+        doctorId = null
+        timeSlot = null
+        dateSlot = null
+
+        
+          
+
+        $("#doctorList").on('change', function(){
+            doctorId = this.value
+            const selectElement = document.getElementById("doctorList");
+            const selectedOption = selectElement.options[selectElement.selectedIndex];
+            const optionText = selectedOption.text;
+            localStorage.setItem('doctorName', optionText)
+            LoadDataFromLocalStorage(dateSlot, doctorId, localStorage.getItem('userName'))
+        })
+        
+        $("#timeSlot").on('change', function(){
+            timeSlot = this.value
+            LoadDataFromLocalStorage(dateSlot, doctorId, localStorage.getItem('userName'))
+        })
+
+        $("#days").on('change', function(){
+            dateSlot = this.value
+            loadTimeSlots(1)
+            setTimeout(function(){
+                LoadDataFromLocalStorage(dateSlot, doctorId, localStorage.getItem('userName'))
+            }, 500)
+            
+        })
+
+        function SaveDataToLocalStorage(data, dbname)
+        {
+            var a = [];
+            // Parse the serialized data back into an aray of objects
+            a = JSON.parse(localStorage.getItem('localdb')) || [];
+            // Push the new data (whether it be an object or anything else) onto the array
+            a.push(data);
+            // Alert the array value
+            console.log("local cache added : "+a);  // Should be something like [Object array]
+            // Re-serialize the array back into a string and store it in localStorage
+            localStorage.setItem('localdb', JSON.stringify(a));
+        }
+
+        function LoadDataFromLocalStorage(dateSlot, doctorId, dbname){
+            var a = [];
+            a = JSON.parse(localStorage.getItem('localdb')) || [];
+            $("#timeSlot > option").each(function() {
+                for(var i=0; i<a.length; i++){
+                    if(dateSlot == a[i].dateSlot && this.value == a[i].timeSlot && doctorId == a[i].doctorId){
+                        $("#timeSlot option[value='"+this.value+"']").remove();
+                    }
+                }
+            });
+           
+            
+            
+        }
+        
+
+        
+
+
+        $("#takeapp").on('click', function(){
+            var checkbox = document.getElementById("ehrPermission");
+            const data = {};
+            data.timeSlot = timeSlot
+            data.dateSlot = dateSlot
+            data.doctorId = doctorId
+            data.userId = localStorage.getItem('userId')
+            //data.userId = localStorage.getItem('userName')
+            data.status = "booked"
+            data.doctorName = localStorage.getItem('doctorName')
+            data.patientName = localStorage.getItem('userName')
+            SaveDataToLocalStorage(data, localStorage.getItem('userName'));
+            var curretUserId = localStorage.getItem('userId');
+            if (checkbox.checked){
+                var ehrObject = {drId: doctorId, Permission: true, userId: curretUserId};
+                localStorage.setItem("ehr_permission"+curretUserId, JSON.stringify(ehrObject));
+            }else{
+                var ehrObject = {drId: doctorId, Permission: false, userId: curretUserId};
+                localStorage.setItem("ehr_permission"+curretUserId, JSON.stringify(ehrObject));
+            }
+            console.log(data)
+            $.ajax({
+                type: "POST",
+                url:  BASE_URL+"/appointment/api/appointments",
+                data: data,
+                success: function(response) {
+                    // Handle successful response
+                    if(response.code == 201){
+                        const jsonString = JSON.stringify(data);
+                        localStorage.setItem('bData', jsonString)
+                        setTimeout(function(){
+                            window.location = "{% url 'booking-done' %}"
+                        }, 250);
+                    }
+                    
+                },
+                error: function(xhr, status, error) {
+                    // Handle error response
+                    console.log(xhr.responseText);
+                }
+                });
+        })
+
+        
+
+
+        $('#depList').on('change', function() {
+            thisId = this.value
+            $("#doctorList").empty();
+
+            $.ajax({
+                type: "GET",
+                url:  BASE_URL+"/doctors/api/doctor/"+this.value,
+    
+                success: function(data, textStatus, xhr){
+                    if(xhr.status == 200){
+                        if(data != {}){
+                            var str = ""
+                            str += '<option value="" selected="">Select Doctor</option>'
+                            for (let i = 0; i < data.length; i++) {
+                                str += "<option value="+data[i].id+" >"+data[i].name+"</option>";
+                            }
+                            $("#doctorList").append(str)
+                        }
+                        
+                        loadTimeSlots(thisId)
+                        console.log(data)
+                    }
+                },
+                error: function(e) {
+                    //todo what you wish 
+                }
+            });
+        });
+
+        
+        function loadTimeSlots(id){
+            $("#timeSlot").empty();
+            const storedData = JSON.parse(localStorage.getItem('myArray'));
+            
+            $.ajax({
+                type: "GET",
+                url:  BASE_URL+"/booking/api/timeslot",
+                
+                success: function(data, textStatus, xhr){
+                    if(xhr.status == 200){
+                        if(data != {}){
+                            var str = ""
+                            str += '<option value="" selected="">Select Timeslot</option>'
+                            for (let i = 0; i < data.length; i++) {
+                                str += "<option value="+data[i].timeSlot+" >"+data[i].timeSlot+"</option>";
+                            }
+                            $("#timeSlot").append(str)
+                        }
+                        
+                        console.log(data)
+                    }
+                },
+                error: function(e) {
+                    //todo what you wish 
+                }
+            });
+        }
+
+
+
+
+    </script>
+
+<script>
+
+    $(document).ready(function(){
+        if (localStorage.getItem('userId') != null ){
+            $('#userLoginText').text(localStorage.getItem('userName'))
+            
+            }else{
+                $('#xxx').remove();
+                $('#yyy').remove();
+                $('#zzz').remove();
+            }
+
+
+            const dateInput = document.getElementById("days");
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 2); // get tomorrow's date
+            const twentyDaysLater = new Date();
+            twentyDaysLater.setDate(twentyDaysLater.getDate() + 20); // get the date 20 days from tomorrow
+            const minDate = tomorrow.toISOString().split("T")[0]; // convert to ISO string and get date part
+            const maxDate = twentyDaysLater.toISOString().split("T")[0]; // convert to ISO string and get date part
+            dateInput.min = minDate; // set the minimum date
+            dateInput.max = maxDate; // set the maximum date
+
+
+    })
+</script>
+
+<script src={% static "assets/bootstrap/js/bootstrap.min.js" %}></script>
+<script src={% static "assets/js/bs-init.js" %}></script>
+<script src={% static "assets/js/theme.js" %}></script>
+<script src={% static "assets/js/zectStudio_12H-Time-Format-scripts.js" %}></script>
+
+    {% endblock %}

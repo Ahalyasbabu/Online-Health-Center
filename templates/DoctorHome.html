@@ -1,0 +1,344 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div id="wrapper">
+    <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
+        <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+                <div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-laugh-wink"></i></div>
+                <div class="sidebar-brand-text mx-3"><span>Consult</span></div>
+            </a>
+            <hr class="sidebar-divider my-0">
+            <ul class="navbar-nav text-light" id="accordionSidebar">
+                <li id="yyy" class="nav-item"><a  class="nav-link active  loginn" class="nav-link" href="{% url 'doctors-home' %}"><i class="far fa-bookmark"></i><span>My appointment</span></a></li>
+                <li id="aaa" class="nav-item"><a   class="nav-link " href="{% url 'list-medicine-doctor' %}"><i class="far fa-bookmark"></i><span>Medicines</span></a></li>
+                <li id="zzz" class="nav-item"><a   class="nav-link" href="{% url 'doctor-feedback' %}"><i class="far fa-bookmark"></i><span>Feedback(s)</span></a></li>
+                <li  class="nav-item"><a  class="nav-link " class="nav-link" href="{% url 'doctor-profile' %}"><i class="far fa-bookmark"></i><span>Profile</span></a></li>
+                <li class="nav-item"></li>
+            </ul>
+                        </div>
+    </nav>
+    <div class="d-flex flex-column" id="content-wrapper">
+        <div id="content">
+            <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
+                <div class="container-fluid">
+                    <button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button>
+                    
+                    <ul class="navbar-nav flex-nowrap ms-auto">
+                            
+                        <li class="nav-item dropdown no-arrow mx-1"></li>
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <div class="shadow dropdown-list dropdown-menu dropdown-menu-end" aria-labelledby="alertsDropdown"></div>
+                        </li>
+                        <div class="d-none d-sm-block topbar-divider"></div>
+                        <li class="nav-item dropdown no-arrow" onclick="logoutNow()">
+                            <div class="nav-item dropdown no-arrow"><a id="test" class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown"><span class="d-none d-lg-inline me-2 text-gray-600 small" id="userLoginText">Login</span><img  class="border rounded-circle img-profile"  src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png"></a>
+                                <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a class="dropdown-item" href="#"></a>
+                                    <div class="dropdown-divider"></div><a class="dropdown-item" href="{% url 'login' %}"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
+                                </div>
+                            </div>
+                            <script>
+                                $("#test").on('click',function(){
+                                    if (localStorage.getItem('userName') == "" || localStorage.getItem('userId') == undefined ){
+                                        window.location = "{% url 'login' %}"
+                                    }
+                                    
+                                })
+
+                                
+                            </script>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <div class="container-fluid">
+                <div class="d-sm-flex justify-content-between align-items-center mb-4">
+                    <h3 class="text-dark mb-0">My Appointments.</h3><br><br><br><br>
+                </div>
+            </div>
+            
+            
+              <div  class="container">
+                <div class="row" id="appList">
+
+                </div>
+              </div>
+            
+             
+        </div>
+        <footer class="bg-white sticky-footer">
+            <div class="container my-auto">
+                <div class="text-center my-auto copyright"><span>Copyright © Brand 2023</span></div>
+            </div>
+        </footer>
+    </div>
+</div>
+<script>
+    var QUERY_DATA = null
+
+    var userId = null
+    $(document).ready(function(){
+        
+        //alert(localStorage.getItem('did'))
+        if (localStorage.getItem('did') != null ){
+            $('#userLoginText').text('Dr.'+localStorage.getItem('dname'))
+            
+        }else{
+            $('#xxx').remove();
+            $('#yyy').remove();
+            
+        }
+
+        $.ajax({
+                type: "GET",
+                url:  BASE_URL+"/appointment/api/doctor/appointments/"+localStorage.getItem('did'),
+                success: function(data, textStatus, xhr){
+                    if(xhr.status == 200){
+                        if(data != {}){
+                            LoadDataFromLocalStorage(data)
+                        }
+                        
+                        console.log(data)
+                    }
+                },
+                error: function(e) {
+                    //todo what you wish 
+                }
+            });
+
+    })
+
+    function isDatePast(dateString) {
+        // Create a new Date object for the input date string
+        const inputDate = new Date(dateString);
+
+        // Get the current time in milliseconds
+        const currentTime = new Date().getTime();
+
+        // Get the time of the input date in milliseconds
+        const inputTime = inputDate.getTime();
+
+        // Compare the input time to the current time
+        if (inputTime < currentTime) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    function SaveDataToLocalStorage(data)
+    {
+        var a = [];
+        // Parse the serialized data back into an aray of objects
+        a = JSON.parse(localStorage.getItem('localCache2')) || [];
+        // Push the new data (whether it be an object or anything else) onto the array
+        a.push(data);
+        // Alert the array value
+        console.log("local cache added : "+a);  // Should be something like [Object array]
+        // Re-serialize the array back into a string and store it in localStorage
+        localStorage.setItem('localCache2', JSON.stringify(a));
+    }
+
+    function saveFromDb(data)
+    {
+        var a = [];
+        // Parse the serialized data back into an aray of objects
+        a = JSON.parse(localStorage.getItem('localCache3')) || [];
+        // Push the new data (whether it be an object or anything else) onto the array
+        a.push(data);
+        // Alert the array value
+        console.log("local cache added : "+a);  // Should be something like [Object array]
+        // Re-serialize the array back into a string and store it in localStorage
+        localStorage.setItem('localCache3', JSON.stringify(a));
+    }
+
+
+
+    var removeByAttr = function(arr, attr, value){
+        var i = arr.length;
+        while(i--){
+        if( arr[i] 
+            && arr[i].hasOwnProperty(attr) 
+            && (arguments.length > 2 && arr[i][attr] === value ) ){ 
+
+            arr.splice(i,1);
+
+        }
+        }
+        return arr;
+    }
+
+    function freeUpTimeSlot(id){
+        console.log("-")
+        var a = [];
+        a = JSON.parse(localStorage.getItem('localdb')) || [];
+        for(var m=0; m<QUERY_DATA.length; m++){
+            if(QUERY_DATA[m].id == id){
+                for(var h=0; h<a.length; h++){
+                    if(a[h].timeSlot == QUERY_DATA[m].timeSlot && a[h].dateSlot == QUERY_DATA[m].dateSlot && a[h].doctorId == QUERY_DATA[m].doctorId){
+                        console.log("==")
+
+                        var itemToRemove = a[h];
+
+                        var index = a.findIndex(function(item) {
+                            return JSON.stringify(item) === JSON.stringify(itemToRemove);
+                        });
+                        if (index !== -1) {
+                            a.splice(index, 1);
+                            localStorage.removeItem("localdb");
+                            localStorage.setItem('localdb', JSON.stringify(a));
+
+                        }
+                        console.log(typeof(a))
+                        
+                        console.log(localStorage.getItem('localdb', JSON.stringify(a)))
+                        console.log("==")
+                    }
+                }
+            }
+        }
+    }
+
+   
+
+    function LoadDataFromLocalStorage(data){
+        var a = [];
+        a = JSON.parse(localStorage.getItem('localCache2')) || [];
+        str = ''
+        QUERY_DATA = data;
+
+        
+        var thisDoctorId = localStorage.getItem("did");
+
+        if(a.length <= 0){
+            for(var x=0; x<data.length; x++){
+                if(!isDatePast(data[x].dateSlot)){
+                    str += '<div class="col-sm">'
+                    str += '       <div class="card" style="width: 18rem;">'
+                    str += '           <div class="card-body">'
+                    str += '           <h5 class="card-title">'+data[x].dateSlot +'</h5>'
+                    str += '           <p class="card-text">PATIENT NAME : '+data[x].patientName+'</p>'
+                    str += '           <p class="card-text">TIME : '+data[x].timeSlot+'</p>'
+                    str += '           <a href="#" id="'+data[x].id+'" onclick="acceptAp(this)" class="btn btn-primary">ACCEPT</a>'
+                    str += '           <a href="#" id="'+data[x].id+'" onclick="ignoreAp(this)" class="btn btn-danger">IGNORE</a>'
+                    str += '           </div>'
+                    str += '       </div>'
+                    str += '   </div>'
+                }
+                
+            }
+            $("#appList").append(str)  
+            return
+        }
+
+        
+        for(var x=0; x<data.length; x++){
+
+
+            var result = a.find(item => item.id == data[x].id)
+            try{
+                if(result.type == "ok"){
+                    if(!isDatePast(data[x].dateSlot)){
+                        str += '<div class="col-sm">'
+                        str += '       <div class="card" style="width: 18rem;">'
+                        str += '           <div class="card-body">'
+                        str += '           <h5 class="card-title">'+data[x].dateSlot +'</h5>'
+                        str += '           <p class="card-text">PATIENT NAME : '+data[x].patientName+'</p>'
+                        str += '           <p class="card-text">TIME : '+data[x].timeSlot+'</p>'
+                        str += '           <a href="#" id="'+data[x].id+'"  class="btn btn-success">Accepted</a>'
+                        try{
+                            var ehrStoredValues = localStorage.getItem("ehr_permission"+data[x].userId);
+                            var ehrPersmissionData = JSON.parse(ehrStoredValues);
+                            if(ehrPersmissionData.drId == thisDoctorId && ehrPersmissionData.Permission && ehrPersmissionData.userId == data[x].userId){
+                                str += '           <a href="#" id="'+data[x].userId+'"  onclick="ehrDetails(this)" class="btn btn-success">EHR</a>'
+                            }
+                        }catch(e){}
+                        str += '           </div>'
+                        str += '       </div>'
+                        str += '   </div>'
+                    }
+                }else if(result.type == "cancle"){
+                    if(!isDatePast(data[x].dateSlot)){
+                        str += '<div class="col-sm">'
+                        str += '       <div class="card" style="width: 18rem;">'
+                        str += '           <div class="card-body">'
+                        str += '           <h5 class="card-title">'+data[x].dateSlot +'</h5>'
+                        str += '           <p class="card-text">PATIENT NAME : '+data[x].patientName+'</p>'
+                        str += '           <p class="card-text">TIME : '+data[x].timeSlot+'</p>'
+                        str += '           <a href="#" id="'+data[x].id+'"  class="btn btn-danger">Rejected</a>'
+                        str += '           </div>'
+                        str += '       </div>'
+                        str += '   </div>'
+                    }
+                }else{
+                    if(!isDatePast(data[x].dateSlot)){
+                        str += '<div class="col-sm">'
+                        str += '       <div class="card" style="width: 18rem;">'
+                        str += '           <div class="card-body">'
+                        str += '           <h5 class="card-title">'+data[x].dateSlot +'</h5>'
+                        str += '           <p class="card-text">PATIENT NAME : '+data[x].patientName+'</p>'
+                        str += '           <p class="card-text">TIME : '+data[x].timeSlot+'</p>'
+                        str += '           <a href="#" id="'+data[x].id+'" onclick="acceptAp(this)" class="btn btn-primary">ACCEPT</a>'
+                        str += '           <a href="#" id="'+data[x].id+'" onclick="ignoreAp(this)" class="btn btn-danger">IGNORE</a>'
+                        str += '           </div>'
+                        str += '       </div>'
+                        str += '   </div>'
+                    }
+                }
+            }catch(e){
+                if(!isDatePast(data[x].dateSlot)){
+                    str += '<div class="col-sm">'
+                    str += '       <div class="card" style="width: 18rem;">'
+                    str += '           <div class="card-body">'
+                    str += '           <h5 class="card-title">'+data[x].dateSlot +'</h5>'
+                    str += '           <p class="card-text">PATIENT NAME : '+data[x].patientName+'</p>'
+                    str += '           <p class="card-text">TIME : '+data[x].timeSlot+'</p>'
+                    str += '           <a href="#" id="'+data[x].id+'" onclick="acceptAp(this)" class="btn btn-primary">ACCEPT</a>'
+                    str += '           <a href="#" id="'+data[x].id+'" onclick="ignoreAp(this)" class="btn btn-danger">IGNORE</a>'
+                    str += '           </div>'
+                    str += '       </div>'
+                    str += '   </div>'
+                }
+            }
+            
+   
+        }
+        $("#appList").append(str)  
+    }
+
+
+    function acceptAp(e){
+        d={}
+        d.id = e.id
+        d.type="ok"
+        SaveDataToLocalStorage(d)
+        setTimeout(function(){
+            location.reload()
+        }, 100)
+    }
+
+    function ehrDetails(e){
+        localStorage.setItem("this_ehr_id", e.id)
+        setTimeout(function(){
+            window.location.href = "{% url 'doctor-ehr-list' %}"
+        }, 100)
+    }
+    
+
+    function ignoreAp(e){
+        d={}
+        d.id = e.id
+        d.type="cancle"
+        SaveDataToLocalStorage(d)
+        freeUpTimeSlot(e.id)
+        setTimeout(function(){
+            location.reload()
+        }, 100)
+    }
+</script>
+<script src={% static "assets/bootstrap/js/bootstrap.min.js" %}></script>
+<script src={% static "assets/js/bs-init.js" %}></script>
+<script src={% static "assets/js/theme.js" %}></script>
+<script src={% static "assets/js/zectStudio_12H-Time-Format-scripts.js" %}></script>
+
+{% endblock %}

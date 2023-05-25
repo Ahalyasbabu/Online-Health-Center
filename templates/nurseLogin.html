@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-9 col-lg-12 col-xl-10">
+                <div class="card shadow-lg o-hidden border-0 my-5">
+                    <div class="card-body p-0">
+                        <div class="row">
+                            <div class="col-lg-6 d-none d-lg-flex">
+                                <div class="flex-grow-1 bg-login-image" style="background-image: url('https://img.freepik.com/free-vector/hospital-logo-design-vector-medical-cross_53876-136743.jpg');"></div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h4 class="text-dark mb-4">Welcome Back!</h4>
+                                    </div>
+                                    <form class="user">
+                                        <div class="mb-3"><input class="form-control form-control-user" required type="email" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address..." name="email"></div>
+                                        <div class="mb-3"><input class="form-control form-control-user" required type="password" id="exampleInputPassword" placeholder="Password" name="password"></div>
+                                        <div class="mb-3">
+                                            <div class="custom-control custom-checkbox small">
+                                                <div class="form-check"><input class="form-check-input custom-control-input" type="checkbox" id="formCheck-1"><label class="form-check-label custom-control-label" for="formCheck-1">Remember Me</label></div>
+                                            </div>
+                                        <a href="#"></div><button class="btn btn-primary d-block btn-user w-100" type="button" onclick="login()">Login</button></a>
+                                        <hr>
+                                        <hr>
+                                    </form>
+                                    <!-- <div class="text-center"><a class="small" href="{% url 'doctor-login' %}"><b>Login as a Doctor</b></a></div><br> -->
+                                    <!-- <div class="text-center"><a class="small" href="{% url 'admin-login' %}"><b>Login as a Admin</b></a></div><br> -->
+                                    <!-- <div class="text-center"><a class="small" href="#">Forgot Password?</a></div> -->
+                                    <!-- <div class="text-center"><a class="small" href="{% url 'register' %}">Create an Account!</a></div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function login(){
+            if($("#exampleInputEmail").val() == "" || $("#exampleInputPassword").val() == ""){
+                alert("Please provide valid data")
+                return
+            }
+
+            $.get(BASE_URL+"/nurse/api/login/"+$("#exampleInputEmail").val()+"/"+$("#exampleInputPassword").val(),
+             function(data) {
+                console.log(data)
+                if(data != []){
+                    localStorage.setItem("userName", data[0].name)
+                    localStorage.setItem("userId", data[0].email)
+                    localStorage.setItem('isLogin', 1)
+                    localStorage.setItem("userEmail",data[0].email)
+                    setTimeout(function(){
+                        window.location = "{% url 'nurse-home' %}"
+                    }, 30);
+                }else{
+                    alert("No user found")
+                }
+            }); 
+        }
+    </script>
+
+    {% endblock %}

@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div id="wrapper">
+        <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
+            <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+                    <div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-laugh-wink"></i></div>
+                    <div class="sidebar-brand-text mx-3"><span>Consult</span></div>
+                </a>
+                <hr class="sidebar-divider my-0">
+                <ul class="navbar-nav text-light" id="accordionSidebar">
+                    <li class="nav-item"><a  class="nav-link" href="{% url 'homepage' %}"><i class="far fa-bookmark"></i><span>Home</span></a></li>
+                    <li class="nav-item"><a   class="nav-link" href="{% url 'departments' %}"><i class="far fa-bookmark"></i><span>Departments</span></a></li>
+                    <li class="nav-item"><a  class="nav-link" href="{% url 'doctors' %}"><i class="far fa-bookmark"></i><span>Doctors</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'service-list' %}"><i class="far fa-bookmark"></i><span>Services</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'book-appointment' %}"><i class="far fa-bookmark"></i><span>Book an appointment</span></a></li>
+                    <li class="nav-item"><a   class="nav-link" href="{% url 'userAppointments' %}"><i class="far fa-bookmark"></i><span>My appointment</span></a></li>
+                    <li id="zzz" class="nav-item"><a   class="nav-link" href="{% url 'profile-page' %}"><i class="far fa-bookmark"></i><span>My Profile</span></a></li>
+                    <li id="zzz" class="nav-item "><a   class="nav-link " href="{% url 'feedback-add' %}"><i class="far fa-bookmark"></i><span>Feedback</span></a></li>
+                    <li class="nav-item"></li>
+                </ul>
+                <!-- <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div> -->
+            </div>
+        </nav>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
+                    <div class="container-fluid"><button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button>
+                        
+                        <ul class="navbar-nav flex-nowrap ms-auto">
+                            
+                            <li class="nav-item dropdown no-arrow mx-1"></li>
+                            <li class="nav-item dropdown no-arrow mx-1">
+                                <div class="shadow dropdown-list dropdown-menu dropdown-menu-end" aria-labelledby="alertsDropdown"></div>
+                            </li>
+                            <div class="d-none d-sm-block topbar-divider"></div>
+                            <li class="nav-item dropdown no-arrow" onclick="logoutNow()">
+                                <div class="nav-item dropdown no-arrow"><a id="test" class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown"><span class="d-none d-lg-inline me-2 text-gray-600 small" id="userLoginText">Login</span><img  class="border rounded-circle img-profile"  src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png"></a>
+                                    <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a class="dropdown-item" href="#"></a>
+                                        <div class="dropdown-divider"></div><a class="dropdown-item" href="{% url 'login' %}"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
+                                    </div>
+                                </div>
+                                <script>
+                                    $("#test").on('click',function(){
+                                        if (localStorage.getItem('userName') == "" || localStorage.getItem('userId') == undefined ){
+                                            window.location = "{% url 'login' %}"
+                                        }
+                                        
+                                    })
+    
+                                    
+                                </script>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <div class="container-fluid"></div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-4 col-xl-11 offset-md-3 offset-lg-0">
+                            <div class="pricingTable">
+                                <div class="pricingTable-header"><span class="icon"><i class="fa fa-thumbs-up icon"></i></span>
+                                    <h1 class="title" style="font-size: 50px;">Success</h1>
+                                    <!-- <div class="price-value"><span class="currency"><span style="font-weight: normal !important; font-style: normal !important; color: rgb(232, 234, 237); background-color: rgb(32, 33, 36);">₹</span></span><span>99</span></div> -->
+                                </div>
+                                <div class="pricing-content">
+                                    <ul class="list-unstyled">
+                                        <li style="font-size: 20px;"><strong id="nname"></script></strong></li>
+                                        <li style="font-size: 20px;"><strong id="ddate"></strong></li>
+                                        <li style="font-size: 20px;"><strong id="ttime"></strong></li>
+                                    </ul><a class="pricingTable-signup" id="printbtn" href="{% url 'userAppointments' %}">Home</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span>Copyright © Brand 2023</span></div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function(){
+            if (localStorage.getItem('userId') != null ){
+                $('#userLoginText').text(localStorage.getItem('userName'))
+                $('#nname').text("NAME :"+localStorage.getItem('userName'))
+                const jsonString = localStorage.getItem("bData");
+                const myObject = JSON.parse(jsonString);
+                $('#ddate').text("DATE :"+ myObject.dateSlot)
+                $('#ttime').text("TIME :"+ myObject.timeSlot)
+            }else{
+                $('#userLoginText').text('Login')
+                $('#xxx').remove();
+                $('#yyy').remove();
+                $('#zzz').remove();
+            }
+        })
+
+        // $('#printbtn').on('click', function(){
+        //     window.print()
+        // })
+       
+
+    </script>
+<script src={% static "assets/bootstrap/js/bootstrap.min.js" %}></script>
+<script src={% static "assets/js/bs-init.js" %}></script>
+<script src={% static "assets/js/theme.js" %}></script>
+<script src={% static "assets/js/zectStudio_12H-Time-Format-scripts.js" %}></script>
+{% endblock %}

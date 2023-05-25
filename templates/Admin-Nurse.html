@@ -1,0 +1,357 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
+<div id="wrapper">
+    <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
+        <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+                <div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-laugh-wink"></i></div>
+                <div class="sidebar-brand-text mx-3"><span>Consult</span></div>
+            </a>
+            <hr class="sidebar-divider my-0">
+            <ul class="navbar-nav text-light" id="accordionSidebar">
+                <li id="yyy" class="nav-item"><a  class="nav-link  loginn" class="nav-link" href="{% url 'admin-home' %}"><i class="far fa-bookmark"></i><span>Home</span></a></li>
+                <li id="aaa" class="nav-item"><a   class="nav-link " href="{% url 'admin-doctors' %}"><i class="far fa-bookmark"></i><span>Doctors</span></a></li>
+                <li class="nav-item"><a class="nav-link" class="nav-link" href="{% url 'admin-meds' %}"><i class="far fa-bookmark"></i><span>Medicines</span></a></li>
+                <li class="nav-item"><a class="nav-link" class="nav-link" href="{% url 'admin-departments' %}"><i class="far fa-bookmark"></i><span>Departments</span></a></li>
+                <li class="nav-item"><a class="nav-link" class="nav-link" href="{% url 'admin-appointments' %}"><i class="far fa-bookmark"></i><span>Appointments</span></a></li>
+                <li class="nav-item"><a class="nav-link " class="nav-link" href="{% url 'admin-feedbacks' %}"><i class="far fa-bookmark"></i><span>Feedbacks</span></a></li>
+                <li class="nav-item"><a class="nav-link active" class="nav-link active" href="{% url 'nurse-page' %}"><i class="far fa-bookmark"></i><span>Nurse</span></a></li>
+                <li class="nav-item"><a class="nav-link" class="nav-link" href="{% url 'admin-ehr' %}"><i class="far fa-bookmark"></i><span>Ehr</span></a></li>
+                <li class="nav-item"></li>
+            </ul>
+                        </div>
+    </nav>
+    <div class="d-flex flex-column" id="content-wrapper">
+        <div id="content">
+
+
+            <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
+                <div class="container-fluid">
+                    <button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button>
+                    
+                    <ul class="navbar-nav flex-nowrap ms-auto">
+                            
+                        <li class="nav-item dropdown no-arrow mx-1"></li>
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <div class="shadow dropdown-list dropdown-menu dropdown-menu-end" aria-labelledby="alertsDropdown"></div>
+                        </li>
+                        <div class="d-none d-sm-block topbar-divider"></div>
+                        <li class="nav-item dropdown no-arrow" onclick="logoutNow()">
+                            <div class="nav-item dropdown no-arrow"><a id="test" class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown"><span class="d-none d-lg-inline me-2 text-gray-600 small" id="userLoginText">Login</span><img  class="border rounded-circle img-profile"  src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png"></a>
+                                <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a class="dropdown-item" href="#"></a>
+                                    <div class="dropdown-divider"></div><a class="dropdown-item" href="{% url 'login' %}"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
+                                </div>
+                            </div>
+                            <script>
+                                $("#test").on('click',function(){
+                                    if (localStorage.getItem('userName') == "" || localStorage.getItem('userId') == undefined ){
+                                        window.location = "{% url 'login' %}"
+                                    }
+                                    
+                                })
+
+                               
+                            </script>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <div class="container-fluid">
+                <div class="d-sm-flex justify-content-between align-items-center mb-4">
+                    <h3 class="text-dark mb-0">Nurse</h3><br><br><br><br>
+                </div>
+            </div>
+            
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel"><p id="mtitle">Add Nurse</p></h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                            <form class="user">
+                                
+                                <label>First name</label>
+                                <div class="mb-3"><input required class="form-control form-control-user" type="text" id="fname" aria-describedby="" placeholder="First Name" name="fname"></div>
+                                <label>Last name</label>
+                                <div class="mb-3"><input required class="form-control form-control-user" type="text" id="lname" aria-describedby="" placeholder="Last Name" name="lname"></div>
+                                <label>Email</label>
+                                <div class="mb-3"><input required class="form-control form-control-user" type="email" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Email Address" name="email"></div>
+                                <label>Qualification</label>
+                                <div class="mb-3"><input required class="form-control form-control-user" type="text" id="Qualification" aria-describedby="" placeholder="Qualification" name="Qualification"></div>
+                                <!-- <label>Profile picture</label> -->
+                                <!-- <div class="mb-3"><input required class="form-control form-control-user" type="file" id="fileUpload" aria-describedby="" placeholder="Profile image" name="profile"></div> -->
+                                <label>Experience</label>
+                                <div class="mb-3"><input required class="form-control form-control-user" type="number" id="experience" aria-describedby="" placeholder="Experience" name="experience"></div>
+                                
+
+                            </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-primary" onclick="addNurse()">Save changes</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+
+              <div class="modal fade" id="exampleModaledit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel"><p id="mtitle">Edit Nurse</p></h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                            <form class="user">
+                                
+                                <label>First name</label>
+                                <div class="mb-3"><input required class="form-control form-control-user" type="text" id="efname" aria-describedby="" placeholder="First Name" name="fname"></div>
+                                <label>Last name</label>
+                                <div class="mb-3"><input required class="form-control form-control-user" type="text" id="elname" aria-describedby="" placeholder="Last Name" name="lname"></div>
+                                <label>Email</label>
+                                <div class="mb-3"><input required class="form-control form-control-user" type="email" id="eexampleInputEmail" aria-describedby="emailHelp" placeholder="Email Address" name="email" disabled></div>
+                                <label>Qualification</label>
+                                <div class="mb-3"><input required class="form-control form-control-user" type="text" id="eQualification" aria-describedby="" placeholder="Qualification" name="Qualification"></div>
+                                <!-- <label>Profile picture</label> -->
+                                <!-- <div class="mb-3"><input required class="form-control form-control-user" type="file" id="fileUpload" aria-describedby="" placeholder="Profile image" name="profile"></div> -->
+                                <label>Experience</label>
+                                <div class="mb-3"><input required class="form-control form-control-user" type="number" id="eexperience" aria-describedby="" placeholder="Experience" name="experience"></div>
+                                <!-- Select Department :
+                                <select id="edepartments" class="display-inline-block" >
+                                </select> -->
+
+                            </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-primary" onclick="updateNurse()">Save changes</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              
+              <div  class="container">
+                <input type="text" id="search-input" placeholder="Search...">
+                <button type="button" class="btn btn-primary btn-sm"  data-toggle="modal" data-target="#exampleModal">Add Nurse</button>
+                <br><br>
+                
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Last Name</th>
+					<th>Qualification</th>
+                    <th>Email</th>
+                    <th>Experience</th>
+                    <th>Availablity</th>
+                    <th>Edit</th>
+                    <th>Remove</th>
+				</tr>
+			</thead>
+			<tbody id="table-body">
+				
+			</tbody>
+		</table>
+              </div>
+            
+             
+        </div>
+        <footer class="bg-white sticky-footer">
+            <div class="container my-auto">
+                <div class="text-center my-auto copyright"><span>Copyright © Brand 2023</span></div>
+            </div>
+        </footer>
+    </div>
+</div>
+<script>
+    var userId = null
+    $(document).ready(function(){   
+        if (localStorage.getItem('userId') != null ){
+            $('#userLoginText').text(localStorage.getItem('userName'))
+            
+        }else{
+            $('#xxx').remove();
+            $('#yyy').remove();
+            $('#zzz').remove();
+        }
+
+        $('#exampleModal').on('shown.bs.modal', function () {
+            $('#myInput').trigger('focus')
+        })
+
+        
+        $.ajax({
+                type: "GET",
+                url:  BASE_URL+"/nurse/api/getall",
+                success: function(data, textStatus, xhr){
+                    if(xhr.status == 200){
+                        if(data != {}){
+                            console.log(data)
+                            str = ""
+                            for(var i=0; i<data.length; i++){
+                                str+='<tr>'
+                                str+='<td>'+data[i].name+'</td>'
+                                str+='<td>'+data[i].lname+'</td>'
+                                str+='<td>'+data[i].qualification+'</td>'
+                                str+='<td>'+data[i].email+'</td>'
+                                str+='<td>'+data[i].year_of_experience+'</td>'
+                                str+='<td>'+data[i].availability+'</td>'
+                                str+='<td><button id='+ data[i].id +' class="btn" data-toggle="modal" data-target="#exampleModaledit" onclick="loadData(this)">&#128394;</button></td>'
+                                str+='<td><button id='+ data[i].id +' class="btn" onclick="deleteDocotr(this)">&#10060;</button></td>'
+                                str+='</tr>'
+                            }
+                            $("#table-body").append(str);
+                        }
+                    }
+                },
+                error: function(e) {
+                    //todo what you wish 
+                }
+        });
+
+        $("#search-input").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#table-body tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        
+
+    })
+
+    function deleteDocotr(e){
+        $.ajax({
+        type: "GET",
+        url:  BASE_URL+"/nurse/api/delete/"+e.id,
+        });
+        setTimeout(function(){
+            location.reload()
+        },100)
+    }
+
+    function loadData(e){
+        $.get(BASE_URL+"/nurse/api/get/"+e.id, function(data) {
+            console.log(data)
+            $("#efname").val(data.name)
+            $("#elname").val(data.lname)
+            $("#eexampleInputEmail").val(data.email)
+            $("#eQualification").val(data.qualification)
+            $("#eexperience").val(data.year_of_experience)
+            localStorage.setItem("nurse_id", data.id)
+        });
+    }
+      
+
+    function addNurse(){        
+        if(
+            $("#fname").val() == "" ||
+            $("#lname").val() == "" ||
+            $("#exampleInputEmail").val() == "" ||
+            $("#Qualification").val() == "" ||
+            $("#experience").val() == ""
+        ){
+            alert(" Please provide all fileds !")
+            return
+        }
+        
+        
+        var data = {};
+        data.name = $("#fname").val()
+        data.lname = $("#lname").val()
+        data.email = $("#exampleInputEmail").val()
+        data.password = "123"
+        data.qualification = $("#Qualification").val()
+        data.year_of_experience = $("#experience").val()
+    
+
+        console.log(data)
+    
+        
+        $.ajax({
+        type: "POST",
+        url:  BASE_URL+"/nurse/api/add",
+        data: data,
+        success: function(response) {
+            console.log(response)
+            // Handle successful response
+            if(response.code == 200){
+                setTimeout(function(){
+                    location.reload()
+                }, 30);
+            }
+        },
+        error: function(xhr, status, error) {
+            // Handle error response
+            console.log(xhr.responseText);
+        }
+        });
+        
+        
+    }
+
+
+    function updateNurse(){
+        if(
+            $("#efname").val() == "" ||
+            $("#elname").val() == "" ||
+            $("#eexampleInputEmail").val() == "" ||
+            $("#eQualification").val() == "" ||
+            $("#eexperience").val() == ""
+        ){
+            alert(" Please provide all fileds !")
+            return
+        }
+        //alert(localStorage.getItem("nurse_id"))
+        
+        var data = {};
+        data.id = localStorage.getItem("nurse_id")
+        data.name = $("#efname").val()
+        data.lname = $("#elname").val()
+        data.email = $("#eexampleInputEmail").val()
+        data.qualification = $("#eQualification").val()
+        data.year_of_experience = $("#eexperience").val()
+        
+        $.ajax({
+        type: "POST",
+        url:  BASE_URL+"/nurse/api/update",
+        data: data,
+        success: function(response) {
+            console.log(response)
+            // Handle successful response
+            if(response.code == 201){
+                setTimeout(function(){
+                    location.reload()
+                }, 60);
+            }
+        },
+        error: function(xhr, status, error) {
+            // Handle error response
+            console.log(xhr.responseText);
+        }
+        });
+        
+    }
+
+</script>
+<script src={% static "assets/bootstrap/js/bootstrap.min.js" %}></script>
+<script src={% static "assets/js/bs-init.js" %}></script>
+<script src={% static "assets/js/theme.js" %}></script>
+<script src={% static "assets/js/zectStudio_12H-Time-Format-scripts.js" %}></script>
+
+{% endblock %}
