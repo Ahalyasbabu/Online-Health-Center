@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div id="wrapper">
+    <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
+        <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+                <div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-laugh-wink"></i></div>
+                <div class="sidebar-brand-text mx-3"><span>Consult</span></div>
+            </a>
+            <hr class="sidebar-divider my-0">
+            <ul class="navbar-nav text-light" id="accordionSidebar">
+                <li id="yyy" class="nav-item"><a  class="nav-link  loginn" class="nav-link" href="{% url 'nurse-home' %}"><i class="far fa-bookmark"></i><span>Services</span></a></li>
+                <li id="aaa" class="nav-item"><a   class="nav-link " href="{% url 'nurse-medicineList' %}"><i class="far fa-bookmark"></i><span>Medicines</span></a></li>
+                <!-- <li id="zzz" class="nav-item"><a   class="nav-link" href="{% url 'doctor-feedback' %}"><i class="far fa-bookmark"></i><span>Feedback(s)</span></a></li> -->
+                <li  class="nav-item"><a  class="nav-link active" class="nav-link" href="{% url 'nurse-profile' %}"><i class="far fa-bookmark"></i><span>Profile</span></a></li>
+                <li class="nav-item"></li>
+            </ul>
+                        </div>
+    </nav>
+    <div class="d-flex flex-column" id="content-wrapper">
+        <div id="content">
+            <div class="container">
+                <div class="card shadow-lg o-hidden border-0 my-5">
+                    <div class="card-body p-0">
+                        <div class="row">
+                            <div class="col-lg-7">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h4 class="text-dark mb-4">Profile</h4>
+                                    </div>
+                                    <form class="user">
+                                        
+                                            <label for="exampleFirstName">First name</label>
+                                            <div class="col-sm-6 mb-3 mb-sm-0"><input required class="form-control form-control-user" type="text" id="exampleFirstName" placeholder="First Name" name="first_name"></div>
+                                            <label for="exampleLastName">Last name</label>
+                                            <div class="col-sm-6"><input required class="form-control form-control-user" type="text" id="exampleLastName" placeholder="Last Name" name="last_name"></div>
+                                        
+
+                                        
+                                            <label for="Qualification">Qualification</label>
+                                            <div class="col-sm-6 mb-3 mb-sm-0"><input required class="form-control form-control-user" type="text" id="Qualification" placeholder="Qualification" name="first_name"></div>
+                                            <label for="Experience">Experience</label>
+                                            <div class="col-sm-6"><input required class="form-control form-control-user" type="number" id="Experience" placeholder="Experience" name="last_name"></div>
+                                        
+                            
+                                        <label for="exampleInputEmail">Email</label>
+                                        <div class="mb-6"><input required class="form-control form-control-user" type="email" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Email Address" name="email" disabled></div>
+                                        <div class="row mb-3">
+
+                                        </div><button class="btn btn-primary d-block  w-100" type="button" onclick="updateNow()">Update</button>
+                                        <hr>
+                                        <hr>
+                                    </form>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+            </div>
+        </div>
+        <footer class="bg-white sticky-footer">
+            <div class="container my-auto">
+                <div class="text-center my-auto copyright"><span>Copyright © Brand 2023</span></div>
+            </div>
+        </footer>
+    </div>
+</div>
+<script>
+
+    window.onload = function(){
+        $.ajax({
+                type: "GET",
+                url:  BASE_URL+"/doctors/api/profile/"+localStorage.getItem('did'),
+                success: function(data, textStatus, xhr){
+                    if(xhr.status == 200){
+                        if(data != {}){
+                           $("#exampleFirstName").val(data[0].name)
+                           $("#Qualification").val(data[0].qualification)
+                           $("#Experience").val(data[0].year_of_experience)
+                           $("#exampleInputEmail").val(data[0].email)
+                           $("#exampleLastName").val(data[0].lname)
+                        }
+                        
+                        console.log(data)
+                    }
+                },
+                error: function(e) {
+                    //todo what you wish 
+                }
+            });
+    }
+
+    function updateNow(){
+        if(
+            $("#exampleFirstName").val() == "" ||
+            $("#exampleInputEmail").val() == "" ||
+            $("#Qualification").val() == "" ||
+            $("#Experience").val() == "" ||
+            $("#exampleLastName").val() == "" ||
+         ){
+            alert("please fill important fields")
+            return
+        }
+
+        data = {}
+        data.id = localStorage.getItem('did')
+        data.name = $("#exampleFirstName").val()
+        data.lname = $("#exampleLastName").val()
+        data.qualification = $("#Qualification").val()
+        data.year_of_experience = $("#Experience").val()
+        data.email = $("#exampleInputEmail").val()
+        $.ajax({
+            type: "POST",
+            url:  BASE_URL+"/doctors/api/profile/"+localStorage.getItem('did'),
+            data: data,
+            success: function(data) {
+                // handle the response data
+                console.log(data);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                // handle the error
+                alert("profile updated")
+                console.error(errorThrown);
+            }
+        });
+    }
+
+</script>
+<script src={% static "assets/bootstrap/js/bootstrap.min.js" %}></script>
+<script src={% static "assets/js/bs-init.js" %}></script>
+<script src={% static "assets/js/theme.js" %}></script>
+<script src={% static "assets/js/zectStudio_12H-Time-Format-scripts.js" %}></script>
+
+{% endblock %}
